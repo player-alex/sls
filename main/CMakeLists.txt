@@ -1,4 +1,5 @@
 idf_component_register(SRCS "app_main.cpp" "task.cpp"
+                        "azure/network_helper.cpp"
                         "helper/uart.cpp" "helper/system.cpp"
                         "fingerprint/reader.cpp" "fingerprint/helper.cpp"
                         "misc/pwm_audio.c"
