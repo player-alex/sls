@@ -1,0 +1,4 @@
+#ifndef _H_IOT_HUB_PROVISIONING_H_
+#define _H_IOT_HUB_PROVISIONING_H_
+
+#endif

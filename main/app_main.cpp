@@ -52,25 +52,6 @@ static void setup_key_matrix()
     }
 }
 
-static void task_scan_keys(void* pvParameters)
-{
-    while (true)
-    {
-        for (uint8_t i = 0; i < sizeof(KEY_MATRIX_OUT_PINS) / sizeof(KEY_MATRIX_OUT_PINS[0]); ++i)
-        {
-            rtc_gpio_set_level(KEY_MATRIX_OUT_PINS[i], 1);
-        
-            for (uint8_t j = 0; j < sizeof(KEY_MATRIX_IN_PINS) / sizeof(KEY_MATRIX_IN_PINS[0]); ++j)
-            {   
-                uint32_t level = rtc_gpio_get_level(KEY_MATRIX_IN_PINS[j]);
-                ESP_LOGI(TAG, "(%d, %d): %d", i, j, (int)level);
-            }
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
-
 extern "C" void app_main(void)
 {
     init_nvs();
