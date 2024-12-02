@@ -1,0 +1,4 @@
+#ifndef _H_WIFI_PROVISIONING_H_
+#define _H_WIFI_PROVISIONING_H_
+
+#endif
