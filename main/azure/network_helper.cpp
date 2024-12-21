@@ -1,8 +1,11 @@
+extern "C"
+{
 #include <azure_iot_hub_client.h>
 #include <azure_iot_provisioning_client.h>
 #include <backoff_algorithm.h>
 #include <transport_tls_socket.h>
 #include <transport_abstraction.h>
+}
 
 #include "certs.h"
 #include "config.h"
@@ -17,12 +20,12 @@ struct NetworkContext
 };
 
 static const char* TAG = "AzureNetworkHelper";
-static uint8_t shared_mqtt_message_buffer[MQTT_MESSAGE_BUFFER_SIZE] = { 0 };
+static uint8_t shared_mqtt_msg_buf[MQTT_MESSAGE_BUF_SIZE] = { 0 };
 
-uint8_t* get_shared_mqtt_message_buffer(uint32_t* buffer_size)
+uint8_t* get_shared_mqtt_msg_buf(uint32_t* buf_size)
 {
-    *buffer_size = MQTT_MESSAGE_BUFFER_SIZE;
-    return shared_mqtt_message_buffer;
+    *buf_size = sizeof(shared_mqtt_msg_buf);
+    return shared_mqtt_msg_buf;
 }
 
 /**

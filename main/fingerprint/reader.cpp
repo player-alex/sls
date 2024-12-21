@@ -13,7 +13,19 @@ using namespace std;
 
 static const char* TAG = "FingerprintReader";
 
+FingerprintReader::FingerprintReader() { }
+
 FingerprintReader::FingerprintReader(uart_port_t uart_num, gpio_num_t tx_num, gpio_num_t rx_num, uint32_t baud_rate)
+{
+    set_reader(uart_num, tx_num, rx_num, baud_rate);
+}
+
+FingerprintReader::~FingerprintReader()
+{
+    ESP_ERROR_CHECK(uart_driver_delete(_uart_num));
+}
+
+void FingerprintReader::set_reader(uart_port_t uart_num, gpio_num_t tx_num, gpio_num_t rx_num, uint32_t baud_rate)
 {
     uart_config_t uart_cfg = {
         .baud_rate = (int)baud_rate,
@@ -37,7 +49,7 @@ FingerprintReader::FingerprintReader(uart_port_t uart_num, gpio_num_t tx_num, gp
     ESP_ERROR_CHECK(uart_driver_install(uart_num, DEFAULT_RX_BUFFER_SIZE, 0, 0, NULL, 0));
     ESP_ERROR_CHECK(uart_param_config(uart_num, &uart_cfg));
     ESP_ERROR_CHECK(uart_set_pin(uart_num, tx_num, rx_num, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
-
+    
     ESP_LOGI(TAG, "Initialized UART(%d): TX: %d, RX: %d, Baud Rate: %d", uart_num, tx_num, rx_num, (int)baud_rate);
 
     _uart_num = uart_num;
@@ -46,12 +58,16 @@ FingerprintReader::FingerprintReader(uart_port_t uart_num, gpio_num_t tx_num, gp
     _baud_rate = baud_rate;
 }
 
-FingerprintReader::~FingerprintReader()
+void FingerprintReader::flush() 
 {
-    ESP_ERROR_CHECK(uart_driver_delete(_uart_num));
+    // uart_flush(_uart_num);
+    // uart_flush_input(_uart_num);
 }
 
-void FingerprintReader::flush() { }
+void FingerprintReader::sleep()
+{
+    send_cmd_packet(true, FINGERPRINT_SLEEP_MODE);
+}
 
 void FingerprintReader::get_image()
 {

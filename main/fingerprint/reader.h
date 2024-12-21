@@ -69,8 +69,11 @@ public:
     const static TickType_t DEFAULT_READ_TIMEOUT_MS = 2000;
     const static TickType_t DEFAULT_WRITE_TIMEOUT_MS = 2000;
 
+    FingerprintReader();
     FingerprintReader(uart_port_t uart_num, gpio_num_t tx_num, gpio_num_t rx_num, uint32_t baud_rate);
     ~FingerprintReader();
+
+    void set_reader(uart_port_t uart_num, gpio_num_t tx_num, gpio_num_t rx_num, uint32_t baud_rate);
 
     int get_last_error() const { return _error_code; }
 
@@ -85,6 +88,7 @@ public:
     void set_write_timeout(uint32_t timeout_ms) { _write_timeout_ms = timeout_ms; }
 
     void flush();
+    void sleep();
 
     void get_image();
     void image_to_template(uint8_t slot);

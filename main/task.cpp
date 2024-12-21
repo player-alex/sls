@@ -53,12 +53,14 @@ bool execute_task(
                     uxPriority, 
                     &task_infos[pcName].task_handle) == pdPASS)
     {
-        EventBits_t status = xEventGroupWaitBits(   task_infos[pcName].status_event_handle, 
+        if (status_event_handler)
+        {
+            EventBits_t status = xEventGroupWaitBits(   task_infos[pcName].status_event_handle, 
                                                     uxBitsToWaitFor, xClearOnExit, xWaitForAllBits,
                                                     xTicksToWait);
 
-        if (status_event_handler)
             (*status_event_handler)(status);
+        }
         
         return true;
     }
@@ -76,7 +78,7 @@ bool remove_task(const char* task_name)
 
         cancel_task(task_name);
 
-        if (eTaskGetState(task_handle) != eDeleted)
+        if (task_handle && eTaskGetState(task_handle) != eDeleted)
             vTaskDelete(task_handle);
 
         xSemaphoreGive(task_infos[task_name].task_sem);

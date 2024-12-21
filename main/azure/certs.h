@@ -12,7 +12,7 @@
  * https://github.com/Azure-Samples/iot-middleware-freertos-samples/blob/main/docs/certificate-notice.md
  *
  */
-// TODO; Factory;
+
 #define AZURE_IOT_ROOT_CA_PEM                                              \
     "-----BEGIN CERTIFICATE-----\r\n"                                      \
     "MIIDdzCCAl+gAwIBAgIEAgAAuTANBgkqhkiG9w0BAQUFADBaMQswCQYDVQQGEwJJ\r\n" \

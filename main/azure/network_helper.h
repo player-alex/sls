@@ -6,9 +6,9 @@
 #define AZURE_IOT_RETRY_BACKOFF_BASE_MS                 ( 500U )
 
 #define AZURE_IOT_TRANSPORT_SEND_RECV_TIMEOUT_MS        ( 2000U )
-#define MQTT_MESSAGE_BUFFER_SIZE                        ( 5 * 1024U )
+#define MQTT_MESSAGE_BUF_SIZE                           ( 5 * 1024U )
 
-uint8_t* get_shared_mqtt_message_buffer();
+uint8_t* get_shared_mqtt_msg_buf(uint32_t* buf_size);
 
 uint32_t ConnectToServerWithBackoffRetries( const char * pcHostName,
                                                       uint32_t port,

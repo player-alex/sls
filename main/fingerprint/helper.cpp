@@ -5,6 +5,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/event_groups.h>
 
+#include "cancellationtoken.h"
 #include "task.h"
 #include "helper/uart.h"
 #include "helper.h"
@@ -38,6 +39,9 @@ void FingerprintReaderHelper::_get_image(bool wait_to_removed, bool* owner_task_
 
     while (true)
     {
+        if (cancellation_token && cancellation_token->is_cancellation_requested())
+            break;
+
         task_status = get_task_status(task_name);
 
         if (task_status != EVENT_BITS_TASK_NONE && task_status != EVENT_BITS_TASK_RUNNING)
@@ -102,11 +106,17 @@ void FingerprintReaderHelper::enroll(uint16_t id)
         bool is_task_running = get_task_status(task_name) == EVENT_BITS_TASK_RUNNING;
         uint8_t i = 1;
 
+        set_task_result(task_name, FingerprintReaderHelper::EVENT_BITS_ENROLLING);
+
         while (is_task_running)
         {
             vTaskDelay(pdMS_TO_TICKS(1));
 
             is_task_running = get_task_status(task_name) == EVENT_BITS_TASK_RUNNING;
+
+            if (instance->cancellation_token)
+                is_task_running &= !instance->cancellation_token->is_cancellation_requested();
+
             i = 1;
             
             while (i <= 2 && is_task_running)
@@ -150,10 +160,16 @@ void FingerprintReaderHelper::enroll(uint16_t id)
         auto task_type = FingerprintReaderHelper::TaskType::Enroll;
         auto task_name = TASK_NAMES.at(task_type);
 
-        if (get_task_result(task_name) == FingerprintReaderHelper::EVENT_BITS_ENROLLED)
+        if (get_task_result(task_name) & FingerprintReaderHelper::EVENT_BITS_ENROLLED)
+        {
             ESP_LOGI(TAG, "Successful enrollment");
+             _last_enrollment_status = EVENT_BITS_ENROLLED;
+        }
         else
+        {
             ESP_LOGI(TAG, "Failed enrollment");
+             _last_enrollment_status = EVENT_BITS_ENROLLMENT_FAILED;
+        }
 
         remove_task(TASK_NAMES.at(TaskType::Enroll));
         ESP_LOGI(TAG, "Removed task");
@@ -162,6 +178,7 @@ void FingerprintReaderHelper::enroll(uint16_t id)
         ESP_LOGI(TAG, "Flushed uart buffers");
     };
 
+     _last_enrollment_status = EVENT_BITS_ENROLLING;
     execute_task(   task_enroll, 
                     TASK_NAMES.at(TaskType::Enroll),
                     DEFAULT_TASK_STACK_SIZE, tskIDLE_PRIORITY, 
@@ -192,6 +209,11 @@ pair<uint16_t, uint16_t> FingerprintReaderHelper::search(bool fast_search, uint8
         while (is_task_running)
         {
             vTaskDelay(pdMS_TO_TICKS(1));
+
+            is_task_running = get_task_status(task_name) == EVENT_BITS_TASK_RUNNING;
+            
+            if (instance->cancellation_token)
+                is_task_running &= !instance->cancellation_token->is_cancellation_requested();
 
             ESP_LOGI(TAG, "Place finger on sensor");
             instance->_get_image(false, &is_task_running);

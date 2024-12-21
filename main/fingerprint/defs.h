@@ -50,6 +50,7 @@
 #define FINGERPRINT_VERIFY_PASSWORD       ( 0x13 )    // Verifies the password
 #define FINGERPRINT_HI_SPEED_SEARCH       ( 0x1B )    // Asks the sensor to search for a matching fingerprint template to the last model generated
 #define FINGERPRINT_TEMPLATE_COUNT        ( 0x1D )    // Read finger template numbers
+#define FINGERPRINT_SLEEP_MODE            ( 0x33 )    // Set sensor into dormancy mode
 #define FINGERPRINT_AURA_LED_CONFIG       ( 0x35 )    // Aura LED control
 #define FINGERPRINT_LED_STATE_ON          ( 0x50 )    // Turn on the onboard LED
 #define FINGERPRINT_LED_STATE_OFF         ( 0x51 )    // Turn off the onboard LED
