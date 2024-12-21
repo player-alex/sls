@@ -13,17 +13,26 @@ This project is Smart(IoT) Door Lock System based on ESP32-S3 and Microsoft Azur
 1. IoT Central
 2. Functions
 
+# Audio
+This system embeds audio files through the following parts:  
+**TTS -> MP3 -> WAV -> Wav2Code **  
+</b>  
+Audio, not voice, is referenced at: pixabay.com
+
 # TODO
-1. Light Sleep
+1. Light Sleep  
 There is a slight delay when recovering from Inactive Mode to Active Mode.  
 So we should use light sleep.  
 The important part is the need for fine-grained control over Executable Tasks.  
 If not controlled, a crash will occur.
 
 # Known Issues
-1. Azure SDK "Subscribe" functions
+1. Azure SDK "Subscribe" functions  
 In my experience, i got an MQTT error when calling the subscribe functions.  
 The cause has not been idenfitied.
 
-2. JM-101B(Fingerprint Reader) Communication Hangs
+2. JM-101B(Fingerprint Reader) Communication Hangs  
 If the connection is suddenly disconnected during transmission, the system will hang.  
+
+3. Inaccurate Motor Control  
+If you want more precise control, you should use a timer.
