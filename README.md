@@ -13,18 +13,34 @@ This project is Smart(IoT) Door Lock System based on ESP32-S3 and Microsoft Azur
 1. IoT Central
 2. Functions
 
+If you want mobile messaging(Alarm), you should use NotificationHubs & Firebase Cloud Messaging.  
+
+
+# Device Provisioning
+
+Before a device can communicate with IoT Hub, it needs a SAS key.   
+Follow next instruction: [Device authentication concepts in IoT Central](https://learn.microsoft.com/en-us/azure/iot-central/core/concepts-device-authentication)
+
 # Audio
-This system embeds audio files through the following parts:  
-**TTS -> MP3 -> WAV -> Wav2Code **  
+The system embeds audio files through the following parts:  
+**TTS -> MP3 -> WAV -> Wav2Code**  
 </b>  
 Audio, not voice, is referenced at: pixabay.com
+
+# Power Management
+The system controls the modules with PNP Transistors to save power in active mode.  
+And if there no input for 30 seconds, it will enter deep sleep mode.    
+
 
 # TODO
 1. Light Sleep  
 There is a slight delay when recovering from Inactive Mode to Active Mode.  
 So we should use light sleep.  
 The important part is the need for fine-grained control over Executable Tasks.  
-If not controlled, a crash will occur.
+If not controlled, a crash will occur.  
+
+2. Executable Task Refactoring  
+Need executable task refactoring.  
 
 # Known Issues
 1. Azure SDK "Subscribe" functions  
@@ -36,3 +52,6 @@ If the connection is suddenly disconnected during transmission, the system will 
 
 3. Inaccurate Motor Control  
 If you want more precise control, you should use a timer.
+
+# Notice
+This is not the final version.  
