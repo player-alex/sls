@@ -2,7 +2,7 @@
 
 > 🔐 IoT-enabled biometric door lock powered by ESP32-S3 and Microsoft Azure
 
-A personal IoT project (university assignment) featuring dual-factor authentication (fingerprint + PIN), cloud telemetry, and intelligent power management. Built on ESP32-S3 with real-time Azure IoT Hub integration.
+A personal IoT project (university assignment) featuring multiple authentication methods (fingerprint or PIN), cloud telemetry, and intelligent power management. Built on ESP32-S3 with real-time Azure IoT Hub integration.
 
 [![ESP32-S3](https://img.shields.io/badge/ESP32-S3-blue.svg)](https://www.espressif.com/en/products/socs/esp32-s3)
 [![Azure IoT](https://img.shields.io/badge/Azure-IoT%20Hub-0078D4.svg)](https://azure.microsoft.com/en-us/services/iot-hub/)
