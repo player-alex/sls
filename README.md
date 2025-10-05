@@ -16,19 +16,18 @@ A personal IoT project (university assignment) featuring dual-factor authenticat
 - **🖐️ Biometric Authentication** - Optical fingerprint sensor (JM-101B) with 2-stage enrollment
 - **🔢 PIN Authentication** - Secure password system (up to 64 digits) stored in NVS flash
 - **🚨 Auto-Lockdown** - 30-second security lockdown after 3 failed authentication attempts
-- **🔐 Dual-Factor Ready** - Supports combined fingerprint + PIN verification
 - **🔄 Password Management** - On-device password change with double verification
 
 ### ☁️ Cloud & IoT
-- **📡 Azure IoT Hub** - Real-time telemetry and cloud-to-device messaging
+- **📡 Azure IoT Hub** - Real-time device-to-cloud telemetry
 - **🔌 Auto-Provisioning** - Device Provisioning Service (DPS) with symmetric key auth
 - **📊 Live Monitoring** - Integration with Azure IoT Central dashboards
-- **🔔 Event Streaming** - 12 distinct telemetry events (door status, security alerts, system events)
+- **🔔 Event Streaming** - 10 telemetry events (door status, security alerts, system events)
 - **🔐 Secure Communication** - MQTT over TLS 1.2 with Azure CA certificates
 
 ### ⚡ Power Management
-- **💤 Deep Sleep Mode** - Ultra-low power consumption (<10µA) after 30s inactivity
-- **⏰ Instant Wake-Up** - RTC GPIO-based wake from keypad, fingerprint touch, or buttons
+- **💤 Deep Sleep Mode** - Ultra-low power consumption after 30s inactivity
+- **⏰ RTC Wake-Up** - Wake from keypad, fingerprint touch, or buttons via RTC GPIO
 - **🔌 Smart Power Control** - PNP transistor-switched peripherals (on-demand activation)
 - **🔋 Battery Optimized** - Intelligent module power gating for extended operation
 
@@ -338,14 +337,14 @@ TTS (Text-to-Speech) → MP3 → WAV → wav2code → Embedded C Arrays
 
 | Task | Priority | Stack | Interval | Purpose |
 |------|----------|-------|----------|---------|
-| `tsk_scan_btns` | 5 | 8KB | 100ms | Button scanning |
-| `tsk_scan_keys` | 5 | 8KB | 10ms | Keypad matrix scan |
-| `tsk_scan_fp` | 5 | 8KB | 250ms | Fingerprint touch detection |
-| `tsk_upd_status` | 5 | 8KB | 10ms | Status monitor & timers |
-| `tsk_init_sys` | 5 | 8KB | Once | WiFi + time sync |
-| `tsk_init_azure` | 5 | 8KB | Once | Azure provisioning |
-| `tsk_send_tels` | 5 | 8KB | 3s | Telemetry dispatcher |
-| `tsk_az_loop` | 5 | 8KB | 3s | MQTT process loop |
+| `tsk_scan_btns` | 0 | 8KB | 100ms | Button scanning |
+| `tsk_scan_keys` | 0 | 8KB | 10ms | Keypad matrix scan |
+| `tsk_scan_fp` | 0 | 8KB | 250ms | Fingerprint touch detection |
+| `tsk_upd_status` | 0 | 8KB | 10ms | Status monitor & timers |
+| `tsk_init_sys` | 0 | 8KB | Once | WiFi + time sync |
+| `tsk_init_azure` | 0 | 8KB | Once | Azure provisioning |
+| `tsk_send_tels` | 0 | 8KB | 3s | Telemetry dispatcher |
+| `tsk_az_loop` | 0 | 8KB | 3s | MQTT process loop |
 
 ### State Machine
 
@@ -391,9 +390,8 @@ TTS (Text-to-Speech) → MP3 → WAV → wav2code → Embedded C Arrays
 ### Wake-Up Flow
 1. RTC GPIO interrupt triggers wake
 2. Boot from deep sleep (retain RTC memory)
-3. Restore system state
+3. Re-initialize WiFi and Azure connection
 4. Resume normal operation
-5. No WiFi reconnect delay (instant response)
 
 ---
 
@@ -402,7 +400,7 @@ TTS (Text-to-Speech) → MP3 → WAV → wav2code → Embedded C Arrays
 ### 1. ⚠️ Azure SDK Subscribe Functions
 **Problem**: MQTT errors may occur when calling subscribe functions
 **Status**: Root cause unidentified
-**Workaround**: Use polling method for C2D messages
+**Note**: Cloud-to-device messaging not currently implemented
 
 ### 2. ⚠️ JM-101B Communication Hangs
 **Problem**: UART deadlock if fingerprint reader disconnects during transmission
@@ -418,6 +416,16 @@ TTS (Text-to-Speech) → MP3 → WAV → wav2code → Embedded C Arrays
 **Problem**: Noticeable delay when waking from deep sleep
 **Solution**: Implement light sleep mode with fine-grained task control
 **Risk**: Requires careful task cancellation to prevent crashes
+
+### 5. ⚠️ Memory Leak in CancellationTokenSource
+**Problem**: Tokens created via `create_linked_token()` are never freed
+**Location**: `cancellationtokensource.cpp` line 38
+**Impact**: Memory leak (~48 bytes per token)
+
+### 6. ⚠️ Incomplete RAII Implementation
+**Problem**: Most resources use manual C-style management
+**Status**: Only UART and I2S use RAII destructors
+**Impact**: Semaphores and event groups may leak on error paths
 
 ---
 
@@ -497,11 +505,11 @@ idf.py monitor -p COM3 | grep "app_main"
 ```
 
 ### Code Style
-- C++17 features enabled
-- STL containers preferred
-- RAII for resource management
+- C++23 features enabled (gnu++2b)
+- STL containers used alongside C-style arrays
+- Limited RAII implementation (UART, I2S)
 - Lambda-based task definitions
-- Semaphore-protected shared resources
+- Manual resource management for most peripherals
 
 ---
 
