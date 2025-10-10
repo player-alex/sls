@@ -1,3 +1,6 @@
+
+<div align="center">
+
 # 🚪 Smart Door Lock System
 
 > 🔐 IoT-enabled biometric door lock powered by ESP32-S3 and Microsoft Azure
@@ -7,6 +10,8 @@ A personal IoT project (university assignment) featuring multiple authentication
 [![ESP32-S3](https://img.shields.io/badge/ESP32-S3-blue.svg)](https://www.espressif.com/en/products/socs/esp32-s3)
 [![Azure IoT](https://img.shields.io/badge/Azure-IoT%20Hub-0078D4.svg)](https://azure.microsoft.com/en-us/services/iot-hub/)
 [![FreeRTOS](https://img.shields.io/badge/FreeRTOS-Enabled-green.svg)](https://www.freertos.org/)
+
+</div>
 
 ---
 
