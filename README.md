@@ -3,7 +3,7 @@
 
 # 🚪 Smart Door Lock System
 
-** 🔐 IoT-enabled biometric door lock powered by ESP32-S3 and Microsoft Azure **
+**🔐 IoT-enabled biometric door lock powered by ESP32-S3 and Microsoft Azure**
 
 A personal IoT project (university assignment) featuring multiple authentication methods (fingerprint or PIN), cloud telemetry, and intelligent power management. Built on ESP32-S3 with real-time Azure IoT Hub integration.
 
