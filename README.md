@@ -558,15 +558,3 @@ A: Check L298N connections (GPIO 38/39), verify power supply, test transistor (G
 🔬 **Prototype Status** - Suitable for learning and experimentation
 
 ---
-
-<div align="center">
-
-**Built with ❤️ using ESP32-S3 and Azure IoT**
-
-🎓 University Project by [@player-alex](https://github.com/player-alex)
-
-🔐 Secure • ☁️ Connected • 🚀 Fast
-
-[⬆ Back to Top](#-smart-door-lock-system)
-
-</div>
