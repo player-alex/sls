@@ -398,33 +398,33 @@ TTS (Text-to-Speech) → MP3 → WAV → wav2code → Embedded C Arrays
 ## 🐛 Known Issues
 
 ### 1. ⚠️ Azure SDK Subscribe Functions
-**Problem**: MQTT errors may occur when calling subscribe functions
-**Status**: Root cause unidentified
+**Problem**: MQTT errors may occur when calling subscribe functions  
+**Status**: Root cause unidentified  
 **Note**: Cloud-to-device messaging not currently implemented
 
 ### 2. ⚠️ JM-101B Communication Hangs
-**Problem**: UART deadlock if fingerprint reader disconnects during transmission
-**Status**: Known hardware limitation
+**Problem**: UART deadlock if fingerprint reader disconnects during transmission  
+**Status**: Known hardware limitation  
 **Mitigation**: Cancellation token system partially handles this
 
 ### 3. ⚠️ Inaccurate Motor Control
-**Problem**: Delay-based timing causes inconsistent lock/unlock
-**Recommendation**: Use hardware timer for precise motor control
+**Problem**: Delay-based timing causes inconsistent lock/unlock  
+**Recommendation**: Use hardware timer for precise motor control  
 **Current**: `vTaskDelay(1000ms)` for motor operation
 
 ### 4. ⚠️ Light Sleep Not Implemented
-**Problem**: Noticeable delay when waking from deep sleep
-**Solution**: Implement light sleep mode with fine-grained task control
+**Problem**: Noticeable delay when waking from deep sleep  
+**Solution**: Implement light sleep mode with fine-grained task control  
 **Risk**: Requires careful task cancellation to prevent crashes
 
 ### 5. ⚠️ Memory Leak in CancellationTokenSource
-**Problem**: Tokens created via `create_linked_token()` are never freed
-**Location**: `cancellationtokensource.cpp` line 38
+**Problem**: Tokens created via `create_linked_token()` are never freed  
+**Location**: `cancellationtokensource.cpp` line 38  
 **Impact**: Memory leak (~48 bytes per token)
 
 ### 6. ⚠️ Incomplete RAII Implementation
-**Problem**: Most resources use manual C-style management
-**Status**: Only UART and I2S use RAII destructors
+**Problem**: Most resources use manual C-style management  
+**Status**: Only UART and I2S use RAII destructors  
 **Impact**: Semaphores and event groups may leak on error paths
 
 ---
